@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#087fc3" />
+  <title>Utilex — Tu lista escolar en un clic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" data-go="home" aria-label="Ir al inicio">
+      <img src="assets/utilex-logo.png" alt="Utilex" />
+    </button>
+    <button class="cart-button" data-go="cart" aria-label="Ver carrito">
+      <span class="cart-icon">🛒</span>
+      <span class="cart-count">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="screen active" id="home">
+      <div class="promo-strip">🎒 VUELTA AL COLE <b>• HASTA 20% DSCTO.</b> <span>Envío gratis desde S/ 49</span></div>
+      <div class="hero">
+        <div class="hero-doodles"><span>✎</span><b>★</b><i>123</i></div>
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <div class="eyebrow">REGRESO A CLASES, SIN COMPLICACIONES</div>
+            <h1>Toda tu lista escolar,<br><span>en minutos.</span></h1>
+            <p>Sube una foto o PDF de tu lista escolar. Nosotros la armamos por ti.</p>
+            <div class="promo-badges"><span>✓ Precios de campaña</span><span>🚚 Delivery gratis</span><span>🎁 Sorpresa en tu pedido</span></div>
+          </div>
+          <figure class="hero-photo">
+            <img src="assets/mama-cutout-v2.png" alt="Mamá feliz con su lista escolar Utilex y útiles escolares">
+          </figure>
+        </div>
+      </div>
+
+      <label class="upload-card" id="dropzone">
+        <input id="fileInput" type="file" accept="image/*,.pdf,application/pdf" hidden />
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+        </div>
+        <strong>Sube tu lista escolar</strong>
+        <span>Foto, captura o PDF</span>
+        <div class="upload-cta">Elegir archivo</div>
+      </label>
+
+      <div class="trust-row">
+        <div><b>⚡</b><span><strong>Rápido</strong>En pocos minutos</span></div>
+        <div><b>✓</b><span><strong>Solo stock real</strong>Sin sorpresas</span></div>
+        <div><b>🔒</b><span><strong>Pago seguro</strong>Compra protegida</span></div>
+      </div>
+
+      <section class="how">
+        <div class="section-kicker">ASÍ DE FÁCIL</div>
+        <h2>De la lista a tu puerta</h2>
+        <div class="steps">
+          <article><b>1</b><span>📄</span><h3>Sube tu lista</h3><p>En foto o PDF</p></article>
+          <article><b>2</b><span>✨</span><h3>La preparamos</h3><p>Buscamos cada útil</p></article>
+          <article><b>3</b><span>🛒</span><h3>Edita y compra</h3><p>Tú tienes el control</p></article>
+        </div>
+      </section>
+    </section>
+
+    <section class="screen processing-screen" id="processing">
+      <div class="processing-card">
+        <div class="paper">
+          <i></i><i></i><i></i><i></i>
+          <div class="scanline"></div>
+        </div>
+        <div class="spark">✦</div>
+        <h2>Estamos leyendo tu lista</h2>
+        <p id="fileName">Identificando productos y comprobando stock...</p>
+        <div class="progress"><span></span></div>
+        <small>Esto tomará solo unos segundos</small>
+      </div>
+    </section>
+
+    <section class="screen" id="options">
+      <div class="options-wrap">
+        <div class="option-celebration">✦ <span>★</span> ✎</div>
+        <span class="section-kicker">¡LISTA ENCONTRADA!</span>
+        <h1>¿Cómo quieres<br>armar tu carrito?</h1>
+        <p>Tenemos todos los productos. Elige la opción que mejor va contigo.</p>
+        <div class="plan-grid">
+          <button class="plan-card economy" data-plan="economy">
+            <div class="plan-icon">💰</div>
+            <span class="plan-label">MÁS ELEGIDA</span>
+            <h2>Opción económica</h2>
+            <p>Marcas confiables al mejor precio. Todo lo necesario, sin gastar de más.</p>
+            <div class="plan-price"><small>Desde</small><strong>S/ 62.40</strong></div>
+            <div class="saving">Ahorras S/ 18.30</div>
+            <div class="plan-action">Elegir económica <b>→</b></div>
+          </button>
+          <button class="plan-card premium" data-plan="premium">
+            <div class="plan-icon">✨</div>
+            <span class="plan-label">CALIDAD SUPERIOR</span>
+            <h2>Opción premium</h2>
+            <p>Marcas reconocidas, mayor duración y acabados que hacen la diferencia.</p>
+            <div class="plan-price"><small>Desde</small><strong>S/ 96.90</strong></div>
+            <div class="premium-note">⭐ Productos recomendados</div>
+            <div class="plan-action">Elegir premium <b>→</b></div>
+          </button>
+        </div>
+        <small class="editable-note">Podrás editar productos y cantidades antes de pagar.</small>
+      </div>
+    </section>
+
+    <section class="screen" id="cart">
+      <div class="page-head">
+        <button class="back" data-go="home">‹</button>
+        <div><span>LISTA ESCOLAR</span><h2>Tu carrito está listo</h2></div>
+      </div>
+      <div class="cart-campaign"><span id="planBadge">💰 AHORRO ACTIVADO</span><b>Vuelta al cole con precio especial</b><button data-go="options">Cambiar opción</button></div>
+      <div class="match-banner"><span>✓</span><div><strong>¡Encontramos todo!</strong><small>6 productos disponibles para entrega</small></div></div>
+      <div class="cart-list" id="cartList"></div>
+      <button class="add-more" id="addMore">＋ Agregar otro producto</button>
+      <section class="product-picker" id="productPicker">
+        <div class="picker-head"><div><small>CATÁLOGO UTILEX</small><h3>¿Qué producto buscas?</h3></div><button id="closePicker" aria-label="Cerrar">×</button></div>
+        <div class="search-box">⌕ <input id="productSearch" placeholder="Ej. plumones, goma, regla..." autocomplete="off"></div>
+        <div class="search-results" id="searchResults"></div>
+      </section>
+      <aside class="summary">
+        <div class="discount"><span>Descuento campaña</span><b id="discount">− S/ 0.00</b></div>
+        <div><span>Subtotal</span><b id="subtotal">S/ 0.00</b></div>
+        <div><span>Envío</span><b class="green">Gratis</b></div>
+        <hr>
+        <div class="total"><span>Total</span><b id="total">S/ 0.00</b></div>
+        <button class="primary" data-go="checkout">Continuar con la compra <span>→</span></button>
+        <small>🔒 Pago seguro y protegido</small>
+      </aside>
+    </section>
+
+    <section class="screen" id="checkout">
+      <div class="checkout-steps">
+        <div class="active"><b>1</b><span>Datos y registro</span></div><i></i>
+        <div><b>2</b><span>Pago</span></div>
+      </div>
+      <div class="page-head">
+        <button class="back" data-go="cart">‹</button>
+        <div><span>CREA TU CUENTA</span><h2>Datos de entrega</h2></div>
+      </div>
+      <form id="checkoutForm" class="checkout-form">
+        <div class="field full"><label>Nombre y apellido</label><input required placeholder="Ej. Andrea Ramírez" /></div>
+        <div class="field"><label>Celular</label><input required inputmode="tel" placeholder="999 999 999" /></div>
+        <div class="field"><label>DNI</label><input required inputmode="numeric" placeholder="12345678" /></div>
+        <div class="field full"><label>Dirección</label><input required placeholder="Av., calle, número" /></div>
+        <div class="field"><label>Distrito</label><select required><option value="">Seleccionar</option><option>Miraflores</option><option>San Isidro</option><option>Surco</option><option>San Miguel</option><option>La Molina</option></select></div>
+        <div class="field"><label>Referencia</label><input placeholder="Frente al parque" /></div>
+
+        <div class="account-box">
+          <div class="account-title"><span>👤</span><div><h3>Crea tu cuenta Utilex</h3><p>Guarda tus pedidos y compra más rápido la próxima vez.</p></div></div>
+          <div class="account-fields">
+            <div class="field full"><label>Correo electrónico <small>Este será tu usuario</small></label><input id="accountEmail" required type="email" autocomplete="email" placeholder="nombre@correo.com" /></div>
+            <div class="field"><label>Crea una contraseña</label><input required type="password" autocomplete="new-password" minlength="6" placeholder="Mínimo 6 caracteres" /></div>
+            <div class="field"><label>Confirma tu contraseña</label><input required type="password" autocomplete="new-password" minlength="6" placeholder="Repite tu contraseña" /></div>
+          </div>
+          <label class="terms"><input required type="checkbox"> <span>Acepto los términos, condiciones y la política de privacidad.</span></label>
+        </div>
+        <button class="primary" type="submit">Crear mi cuenta y continuar <span>→</span></button>
+        <small class="form-safe">🔒 Tus datos están protegidos</small>
+      </form>
+    </section>
+
+    <section class="screen" id="payment">
+      <div class="checkout-steps">
+        <div class="done"><b>✓</b><span>Datos y registro</span></div><i class="done"></i>
+        <div class="active"><b>2</b><span>Pago</span></div>
+      </div>
+      <div class="page-head">
+        <button class="back" data-go="checkout">‹</button>
+        <div><span>PASARELA SEGURA</span><h2>Elige cómo pagar</h2></div>
+      </div>
+      <div class="account-created">
+        <span>✓</span><div><strong>Tu cuenta fue creada</strong><small id="createdUser">Ya puedes continuar con el pago</small></div>
+      </div>
+      <form id="paymentForm" class="checkout-form">
+        <div class="pay-box">
+          <label class="payment selected"><input type="radio" name="pay" value="card" checked><span>💳</span><div><strong>Tarjeta</strong><small>Débito o crédito</small></div><i>●</i></label>
+          <label class="payment"><input type="radio" name="pay" value="yape"><span class="yape">Y</span><div><strong>Yape o Plin</strong><small>Paga con tu celular</small></div><i>○</i></label>
+        </div>
+        <div class="checkout-total"><span>Total a pagar</span><b id="checkoutTotal">S/ 0.00</b></div>
+        <button class="primary" type="submit">Pagar ahora <span>→</span></button>
+        <small class="form-safe">🔒 Pago seguro y protegido</small>
+      </form>
+    </section>
+
+    <section class="screen success-screen" id="success">
+      <div class="confetti">✦ <i>●</i> ◆ <b>✦</b> ●</div>
+      <div class="success-check">✓</div>
+      <span class="section-kicker">PEDIDO CONFIRMADO</span>
+      <h1>¡Tus útiles ya están<br>en camino!</h1>
+      <p>Te enviaremos las novedades de tu pedido por WhatsApp.</p>
+      <div class="order-card">
+        <small>NÚMERO DE PEDIDO</small><strong>#UTX-2026-1842</strong>
+        <hr>
+        <div><span>Entrega estimada</span><b>Mañana, 9:00 – 18:00</b></div>
+        <div><span>Total pagado</span><b id="successTotal">S/ 0.00</b></div>
+      </div>
+      <button class="primary" data-go="home">Volver al inicio</button>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">Producto agregado</div>
+  <script src="app.js"></script>
+</body>
+</html>
