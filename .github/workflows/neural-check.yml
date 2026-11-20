@@ -1,0 +1,20 @@
+name: NEURAL checks
+on:
+  push:
+    branches: [feat/neural-voice-graph]
+    paths:
+      - 'neural/**'
+      - '.github/workflows/neural-check.yml'
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: neural
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run check
