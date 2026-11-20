@@ -1,0 +1,3 @@
+[submodule "neural-cartographer/vendor/cartographer"]
+	path = neural-cartographer/vendor/cartographer
+	url = https://github.com/ho3h/cartographer.git
