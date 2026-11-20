@@ -22,7 +22,9 @@ jobs:
         run: bash neural-cartographer/scripts/prepare.sh
       - name: Install dependencies
         working-directory: neural-cartographer/workspace
-        run: npm ci
+        run: |
+          npm ci
+          npm install --no-save @anthropic-ai/sdk
       - name: Compile app
         working-directory: neural-cartographer/workspace
         run: npm run build
