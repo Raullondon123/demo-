@@ -77,13 +77,39 @@ function stopListening(){state.wantsListen=false;clearTimeout(retryTimer);pauseR
 $('mic').onclick=()=>{if(state.wantsListen){stopListening();setStatus('Conversación detenida.');return}if(!SR){setStatus('Este navegador no dispone de reconocimiento continuo. En Mac prueba Chrome; para voz íntegramente local se requiere instalar Whisper.');return}state.wantsListen=true;$('mic').classList.add('active');$('micLabel').textContent='DETENER CONVERSACIÓN';restartRecognition()};
 async function importChatGPT(file){if(!file)return;try{
  if(file.size>120_000_000)throw new Error('Archivo demasiado grande para esta versión; divide la exportación.');
- setStatus('Analizando conversaciones localmente…');let obj=JSON.parse(await file.text());if(!Array.isArray(obj))throw new Error('Selecciona conversations.json de la exportación de ChatGPT.');
- let corpus=obj.slice(0,2000),added=0;let root=state.selected;
- for(const chat of corpus){let title=safeText(chat.title).trim();if(title.length<3)continue;
- let id='chat-'+String(chat.id||added).replace(/[^\w-]/g,'').slice(0,100);
- if(!find(id)){let i=state.seq++,a=i*2.39996;state.nodes.push({id,label:title,kind:'strategy',source:'chatgpt',description:'Conversación importada: '+title,x:Math.cos(a)*(100+Math.sqrt(i)*16),y:Math.sin(a)*(100+Math.sqrt(i)*16),phase:a});addLink('innovation',id,'chatgpt');added++}
+ setStatus('Analizando conversaciones localmente…');const obj=JSON.parse(await file.text());
+ if(!Array.isArray(obj))throw new Error('Selecciona conversations.json de la exportación de ChatGPT.');
+ const stopwords=new Set('para como este esta estos estas sobre desde entre donde cuando porque aunque hasta pero muy todo todos todas tener hacer puede puedo quieres quiero seria tener cual esto aquello ahora alguna alguno algunos algunas entonces mas menos estan estoy eres somos hemos nuestras nuestro nuestra unos unas esos esas año algo alguien quien que del las los una uno por con sin sus era sido hay aqui hacia antes despues mucho muchos tipo solo nuevo nueva haces dice dijo dame muestra diseño imagen version analiza piensa consulta proyecto proyectos trabajo conversaciones usuario asistente chatgpt chat'.split(' '));
+ const tokenize=str=>String(str||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').match(/[a-z][a-z0-9]{4,}/g)?.filter(w=>!stopwords.has(w))||[];
+ const docs=obj.slice(0,1200).map((chat,i)=>{
+  const title=safeText(chat.title).trim(),texts=[];let len=0;
+  for(const node of Object.values(chat.mapping||{})){
+   const message=node?.message;if(!message||message.author?.role!=='user')continue;
+   for(const p of message.content?.parts||[])if(typeof p==='string'){texts.push(p);len+=p.length}
+   if(len>9000)break;
+  }
+  const excerpt=texts.join(' ').slice(0,9000),words=tokenize(title+' '+excerpt),freq=new Map();
+  for(const w of words)freq.set(w,(freq.get(w)||0)+1);
+  return{id:'chat-'+String(chat.id||i).replace(/[^\w-]/g,'').slice(0,100),title,freq,preview:safeText(excerpt.slice(0,290))};
+ }).filter(d=>d.title.length>=3);
+ const df=new Map();for(const d of docs)for(const w of d.freq.keys())df.set(w,(df.get(w)||0)+1);
+ const vocabulary=new Set([...df.entries()].filter(([w,n])=>n>=2&&n<=docs.length*.4).sort((a,b)=>b[1]-a[1]).slice(0,220).map(x=>x[0]));
+ let added=0,connections=0;
+ for(const d of docs){
+  if(find(d.id))continue;
+  const i=state.seq++,a=i*2.39996;
+  state.nodes.push({id:d.id,label:d.title.slice(0,105),kind:'strategy',source:'chatgpt',description:'Conversación importada. Fragmento: '+d.preview,x:Math.cos(a)*(100+Math.sqrt(i)*16),y:Math.sin(a)*(100+Math.sqrt(i)*16),phase:a});
+  addLink('innovation',d.id,'chatgpt');added++;
+  const terms=[...d.freq.entries()].filter(([w])=>vocabulary.has(w)).map(([w,tf])=>({w,score:(1+Math.log(tf))*Math.log(1+docs.length/(1+(df.get(w)||1)))})).sort((a,b)=>b.score-a.score).slice(0,3);
+  for(const {w} of terms){
+   const tid='topic-'+w;let n=find(tid);
+   if(!n){const k=state.seq++,phi=k*2.39996;n={id:tid,label:w,kind:'other',source:'chatgpt',description:'Concepto recurrente. La relación indica coocurrencia, no causalidad.',x:Math.cos(phi)*(100+Math.sqrt(k)*16),y:Math.sin(phi)*(100+Math.sqrt(k)*16),phase:phi};state.nodes.push(n)}
+   addLink(d.id,tid,'cooccurrence','Palabra recurrente en la conversación');connections++;
+  }
  }
- state.imported=true;$('source').textContent='FUENTES: CHATGPT IMPORTADO';$('stats').textContent=state.nodes.length+' NODOS · '+state.links.length+' CONEXIONES';setStatus('Importadas '+added+' conversaciones como nodos de referencia. Todo permanece en este Mac.');scheduleSave();
+ state.imported=true;$('source').textContent='FUENTES: CHATGPT IMPORTADO';
+ $('stats').textContent=state.nodes.length+' NODOS · '+state.links.length+' CONEXIONES';
+ setStatus('Importadas '+added+' conversaciones y '+connections+' relaciones por coocurrencia. No se ha enviado tu historial a servicios externos.');scheduleSave();
  }catch(e){setStatus('No se pudo importar: '+e.message)}}
 $('import').onclick=()=>$('file').click();$('file').onchange=e=>{importChatGPT(e.target.files?.[0]);e.target.value=''};
 async function init(){try{let r=await fetch('/api/graph');let g=await r.json();state.nodes=g.nodes.map((n,i)=>({...n,phase:i*.74}));state.links=g.links.map((e,i)=>({...e,phase:typeof e.phase==='number'?e.phase:i*.271,speed:e.speed||1}));state.seq=state.nodes.length;state.imported=state.nodes.some(n=>n.source==='chatgpt');if(state.imported)$('source').textContent='FUENTES: CHATGPT IMPORTADO';select(find(state.selected)?state.selected:state.nodes[0]?.id)}catch(e){setStatus('No se pudo cargar la red: '+e.message)}
