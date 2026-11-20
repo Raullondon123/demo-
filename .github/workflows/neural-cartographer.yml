@@ -1,0 +1,28 @@
+name: NEURAL Cartographer build
+on:
+  push:
+    branches:
+      - feat/neural-cartographer
+    paths:
+      - 'neural-cartographer/**'
+      - '.gitmodules'
+      - '.github/workflows/neural-cartographer.yml'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare NEURAL copy
+        run: bash neural-cartographer/scripts/prepare.sh
+      - name: Install dependencies
+        working-directory: neural-cartographer/workspace
+        run: npm ci
+      - name: Compile app
+        working-directory: neural-cartographer/workspace
+        run: npm run build
